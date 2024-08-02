@@ -17,6 +17,7 @@ import java.util.zip.GZIPOutputStream;
 
 public class HistoryManager implements AutoCloseable {
 
+    private static final long SIZE_THRESHOLD = 15_000_000; // 15 mb max cache file size
     private final ComponentLogger logger;
     private final ObjectArrayList<HistoryElement> cache = new ObjectArrayList<>();
     private final File latestLog;
@@ -45,23 +46,19 @@ public class HistoryManager implements AutoCloseable {
         for (HistoryElement element : cached) {
             element.saveTo(logOut);
         }
+        if (latestLog.length() > SIZE_THRESHOLD){
+            logger.info("Archiving log file (too large)");
+            logOut.close();
+            logOut = null;
+            archiveLog(latestLog);
+        }
         logger.info("Saved history");
     }
 
     private void archiveLog(File logFile) throws IOException {
         if (logFile.length() > 0){
             logger.info("Archiving log file {}", logFile.getPath());
-            File archiveFile = null;
-            int fileInd = 0;
-            final Calendar calendar = Calendar.getInstance();
-            while (archiveFile == null || archiveFile.isFile()){
-                final String path = saveDir.getPath() + "/archived-%s-%s-%s-%s.blh.gz".formatted(
-                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), fileInd
-                );
-                logger.info(path);
-                archiveFile = new File(path);
-                logger.info(String.valueOf(archiveFile.exists()));
-            }
+            final File archiveFile = findArchive();
             if (archiveFile.createNewFile()){
                 try (FileOutputStream fos = new FileOutputStream(archiveFile)){
                     try (GZIPOutputStream gzout = new GZIPOutputStream(fos)){
@@ -79,6 +76,20 @@ public class HistoryManager implements AutoCloseable {
             logFile.delete();
             logger.info("Deleted log file {} (was empty)", logFile.getPath());
         }
+    }
+
+    private @NotNull File findArchive() {
+        File archiveFile = null;
+        int fileInd = 0;
+        final Calendar calendar = Calendar.getInstance();
+        while (archiveFile == null || archiveFile.isFile()){
+            final String path = saveDir.getPath() + "/archived-%s-%s-%s-%s.blh.gz".formatted(
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), fileInd
+            );
+            archiveFile = new File(path);
+            fileInd++;
+        }
+        return archiveFile;
     }
 
     public void add(HistoryElement element){
@@ -152,6 +163,7 @@ public class HistoryManager implements AutoCloseable {
     public void close() throws IOException {
         if (logOut != null) {
             logOut.close();
+            logOut = null;
         }
     }
 }

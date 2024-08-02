@@ -26,7 +26,7 @@ public final class BlockHistoryPlugin extends JavaPlugin {
             SECONDARY_COLOR = TextColor.color(0xFF00),
             FAIL_COLOR = TextColor.color(0xCF0000);
     public static final Component CHAT_PREFIX = Component.text("BlockHistory \u00BB ").color(PRIMARY_COLOR);
-    private static final int autosaveInterval = 60*20; //18000 /* 15 minutes */;
+    private static final int autosaveInterval = 12000 /* 10 minutes */;
 
     public static void logThrowable(String label, Throwable e) {
         final ComponentLogger LOGGER = logger();
