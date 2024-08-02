@@ -106,7 +106,7 @@ public final class BlockHistoryCommand implements TabExecutor {
                 return List.of(String.valueOf(entity.getLocation().getBlockX()));
             }
             if (args.length < 3){
-                return List.of(String.valueOf(entity.getLocation().getBlockY()-1));
+                return List.of(String.valueOf(entity.getLocation().getBlockY()-1), String.valueOf(entity.getLocation().getBlockY()));
             }
             if (args.length < 4){
                 return List.of(String.valueOf(entity.getLocation().getBlockZ()));
