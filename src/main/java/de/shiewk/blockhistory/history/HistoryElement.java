@@ -73,7 +73,9 @@ public record HistoryElement(
 
     public enum Type {
         PLACE("PLACED"),
-        BREAK("BROKEN");
+        BREAK("BROKEN"),
+        EMPTY_BUCKET("PLACED USING BUCKET"),
+        FILL_BUCKET("PICKED UP USING BUCKET");
 
         public final String name;
 

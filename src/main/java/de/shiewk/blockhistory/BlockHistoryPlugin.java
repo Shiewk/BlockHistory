@@ -20,6 +20,7 @@ public final class BlockHistoryPlugin extends JavaPlugin {
 
     private static ComponentLogger logger;
     private static HistoryManager manager;
+    private static BlockHistoryPlugin instance;
 
     public static final TextColor
             PRIMARY_COLOR = TextColor.color(0xB4FF),
@@ -33,6 +34,15 @@ public final class BlockHistoryPlugin extends JavaPlugin {
         LOGGER.warn(label);
         LOGGER.warn(String.valueOf(e));
         for (StackTraceElement element : e.getStackTrace()) LOGGER.warn(String.valueOf(element));
+    }
+
+    public static BlockHistoryPlugin getInstance() {
+        return instance;
+    }
+
+    @Override
+    public void onLoad() {
+        instance = this;
     }
 
     @Override

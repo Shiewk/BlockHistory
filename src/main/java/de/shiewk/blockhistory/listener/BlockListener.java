@@ -2,6 +2,7 @@ package de.shiewk.blockhistory.listener;
 
 import de.shiewk.blockhistory.BlockHistoryPlugin;
 import de.shiewk.blockhistory.history.HistoryElement;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 
 public class BlockListener implements Listener {
 
@@ -20,6 +23,18 @@ public class BlockListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) public void onBlockPlace(BlockPlaceEvent event){
         final Block block = event.getBlock();
         addBlockHistoryEntry(HistoryElement.Type.PLACE, event.getPlayer(), block);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) public void onBucketEmptied(PlayerBucketEmptyEvent event){
+        Bukkit.getScheduler().scheduleSyncDelayedTask(BlockHistoryPlugin.getInstance(), () -> {
+            final Block block = event.getBlock();
+            addBlockHistoryEntry(HistoryElement.Type.EMPTY_BUCKET, event.getPlayer(), block);
+        });
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) public void onBucketFilled(PlayerBucketFillEvent event){
+        final Block block = event.getBlock();
+        addBlockHistoryEntry(HistoryElement.Type.FILL_BUCKET, event.getPlayer(), block);
     }
 
     private void addBlockHistoryEntry(HistoryElement.Type type, Player player, Block block) {
