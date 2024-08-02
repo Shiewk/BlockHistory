@@ -6,3 +6,11 @@ prefix: BlockHistory
 load: STARTUP
 authors: [ Shiewk ]
 description: A simple but effective plugin that allows you to find griefers on your server more easily.
+commands:
+  blockhistory:
+    description: View the history of a block.
+    permission: blockhistory.view
+permissions:
+  blockhistory.view:
+    description: Allows the player to view the history of a block.
+    default: op

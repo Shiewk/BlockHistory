@@ -1,10 +1,13 @@
 package de.shiewk.blockhistory.history;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+
+import static net.kyori.adventure.text.Component.text;
 
 public record HistoryElement(
         @NotNull Type type,
