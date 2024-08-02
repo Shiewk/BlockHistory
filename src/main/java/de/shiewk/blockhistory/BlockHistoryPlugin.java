@@ -1,4 +1,4 @@
-package de.shiewk.blockHistory;
+package de.shiewk.blockhistory;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
