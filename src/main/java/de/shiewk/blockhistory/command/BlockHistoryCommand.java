@@ -6,15 +6,12 @@ import de.shiewk.blockhistory.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -106,13 +103,13 @@ public final class BlockHistoryCommand implements TabExecutor {
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Entity entity){
             if (args.length < 2){
-                return List.of(String.valueOf(entity.getX()));
+                return List.of(String.valueOf(entity.getLocation().getBlockX()));
             }
             if (args.length < 3){
-                return List.of(String.valueOf(entity.getY()-1));
+                return List.of(String.valueOf(entity.getLocation().getBlockY()-1));
             }
             if (args.length < 4){
-                return List.of(String.valueOf(entity.getZ()));
+                return List.of(String.valueOf(entity.getLocation().getBlockZ()));
             }
             if (args.length < 5){
                 return Bukkit.getWorlds().stream().map(WorldInfo::getName).toList();
