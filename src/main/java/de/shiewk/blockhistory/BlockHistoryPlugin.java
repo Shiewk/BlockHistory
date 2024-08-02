@@ -13,9 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
+
 public final class BlockHistoryPlugin extends JavaPlugin {
 
-    private static BlockHistoryPlugin instance;
     private static ComponentLogger logger;
     private static HistoryManager manager;
 
@@ -24,6 +26,7 @@ public final class BlockHistoryPlugin extends JavaPlugin {
             SECONDARY_COLOR = TextColor.color(0xFF00),
             FAIL_COLOR = TextColor.color(0xCF0000);
     public static final Component CHAT_PREFIX = Component.text("BlockHistory \u00BB ").color(PRIMARY_COLOR);
+    private static final int autosaveInterval = 60*20; //18000 /* 15 minutes */;
 
     public static void logThrowable(String label, Throwable e) {
         final ComponentLogger LOGGER = logger();
@@ -35,12 +38,31 @@ public final class BlockHistoryPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        logger = (instance = this).getComponentLogger();
-        manager = new HistoryManager();
+        logger = this.getComponentLogger();
 
         registerEvents(new BlockListener());
 
         registerCommand("blockhistory", new BlockHistoryCommand());
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            try {
+                manager.save();
+            } catch (IOException e) {
+                logThrowable("Failed to save history:", e);
+            }
+        }, autosaveInterval, autosaveInterval);
+
+        try {
+            final File saveDir = new File(getDataFolder().getPath() + "/history/");
+            if (!saveDir.exists()){
+                if (!saveDir.mkdirs()){
+                    throw new IOException("Could not create save folder");
+                }
+            }
+            manager = new HistoryManager(logger(), saveDir);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void registerCommand(@NotNull String label, @NotNull TabExecutor executor) {
@@ -62,10 +84,6 @@ public final class BlockHistoryPlugin extends JavaPlugin {
         return logger;
     }
 
-    public static BlockHistoryPlugin getInstance() {
-        return instance;
-    }
-
     private void registerEvents(Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
@@ -73,5 +91,13 @@ public final class BlockHistoryPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        if (manager != null) {
+            try {
+                manager.save();
+                manager.close();
+            } catch (IOException e) {
+                logThrowable("Could not save:", e);
+            }
+        }
     }
 }
