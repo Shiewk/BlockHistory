@@ -55,6 +55,7 @@ public final class BlockHistoryPlugin extends JavaPlugin {
         registerCommand("blockhistory", new BlockHistoryCommand());
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            BlockListener.clearCache();
             try {
                 manager.save();
             } catch (IOException e) {

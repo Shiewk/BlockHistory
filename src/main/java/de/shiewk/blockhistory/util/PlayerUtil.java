@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.UnknownUnits;
 
 import java.util.UUID;
 
@@ -18,6 +17,7 @@ public class PlayerUtil {
     }
 
     public static Component playerName(UUID uuid) {
+        if (uuid == null) return text("Unknown Player");
         Player player;
         if ((player = Bukkit.getPlayer(uuid)) != null){
             return player.displayName();

@@ -2,13 +2,14 @@ package de.shiewk.blockhistory.history;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.UUID;
 
-public record HistoryElement(
+public record HistoryElement (
         @NotNull Type type,
-        UUID playerUUID,
+        @Nullable UUID playerUUID,
         @NotNull UUID worldUUID,
         int x,
         int y,
@@ -75,7 +76,11 @@ public record HistoryElement(
         PLACE("PLACED"),
         BREAK("BROKEN"),
         EMPTY_BUCKET("PLACED USING BUCKET"),
-        FILL_BUCKET("PICKED UP USING BUCKET");
+        FILL_BUCKET("PICKED UP USING BUCKET"),
+        EXPLODE_END_CRYSTAL("EXPLODED USING END CRYSTAL"),
+        EXPLODE_TNT("EXPLODED USING TNT"),
+        EXPLODE_CREEPER("EXPLODED USING CREEPER"),
+        EXPLODE_BLOCK("EXPLODED USING BLOCK");
 
         public final String name;
 
