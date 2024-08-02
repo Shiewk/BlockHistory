@@ -1,0 +1,8 @@
+name: BlockHistory
+version: '2.0'
+main: de.shiewk.blockHistory.BlockHistoryPlugin
+api-version: '1.20'
+prefix: BlockHistory
+load: STARTUP
+authors: [ Shiewk ]
+description: A simple but effective plugin that allows you to find griefers on your server more easily.
