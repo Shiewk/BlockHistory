@@ -12,6 +12,14 @@ Then, if you need to view the history of a block, run **[/blockhistory](https://
 
 This way, you can easily see changes like someone destroying your builds etc.
 
+## Supported interactions
+Currently, only the following block interactions are supported:
+- Placing blocks
+- Breaking blocks
+- Buckets
+- Exploding with end crystal / TNT / Creeper / Respawn Anchor / Bed
+- Sign changes
+
 ## Commands and permissions
 - [Command list](https://github.com/Shiewk/BlockHistory/blob/main/docs/commands.md)
 - [Permission list](https://github.com/Shiewk/BlockHistory/blob/main/docs/permissions.md)
