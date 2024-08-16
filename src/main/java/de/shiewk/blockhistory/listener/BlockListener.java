@@ -3,6 +3,8 @@ package de.shiewk.blockhistory.listener;
 import de.shiewk.blockhistory.BlockHistoryPlugin;
 import de.shiewk.blockhistory.history.HistoryElement;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,10 +18,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -102,7 +101,8 @@ public class BlockListener implements Listener {
                 block.getY(),
                 block.getZ(),
                 System.currentTimeMillis(),
-                block.getType()
+                block.getType(),
+                null
         ));
     }
 
@@ -143,6 +143,31 @@ public class BlockListener implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true) public void onSignChange(SignChangeEvent event){
+        final Player player = event.getPlayer();
+        final Block block = event.getBlock();
+        final Location blockLocation = block.getLocation();
+        final StringBuilder signData = new StringBuilder();
+        final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+        for (Component line : event.lines()) {
+            if (!signData.isEmpty()){
+                signData.append(" ");
+            }
+            signData.append(serializer.serialize(line));
+        }
+        BlockHistoryPlugin.getHistoryManager().add(new HistoryElement(
+                HistoryElement.Type.SIGN,
+                player.getUniqueId(),
+                block.getWorld().getUID(),
+                blockLocation.getBlockX(),
+                blockLocation.getBlockY(),
+                blockLocation.getBlockZ(),
+                System.currentTimeMillis(),
+                block.getType(),
+                signData.toString().getBytes()
+        ));
     }
 
 }

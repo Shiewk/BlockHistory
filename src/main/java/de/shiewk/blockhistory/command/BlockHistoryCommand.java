@@ -4,6 +4,7 @@ import de.shiewk.blockhistory.BlockHistoryPlugin;
 import de.shiewk.blockhistory.util.PlayerUtil;
 import de.shiewk.blockhistory.util.TimeUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -75,16 +76,20 @@ public final class BlockHistoryCommand implements TabExecutor {
                             element.x() == x_ &&
                             element.y() == y_ &&
                             element.z() == z_,
-                    element -> sender.sendMessage(CHAT_PREFIX.append(
-                            text("Block ")
-                                    .append(translatable(element.material()).color(SECONDARY_COLOR))
-                                    .append(text(" was "))
-                                    .append(text(element.type().name).color(SECONDARY_COLOR))
-                                    .append(text(" by "))
-                                    .append(PlayerUtil.playerName(element.playerUUID()).colorIfAbsent(SECONDARY_COLOR))
-                                    .append(text(" at "))
-                                    .append(text(TimeUtil.formatTimestamp(element.timestamp())).color(SECONDARY_COLOR))
-                    ))
+                    element -> {
+                        TextComponent message = text("Block ")
+                                .append(translatable(element.material()).color(SECONDARY_COLOR))
+                                .append(text(" was "))
+                                .append(text(element.type().name).color(SECONDARY_COLOR))
+                                .append(text(" by "))
+                                .append(PlayerUtil.playerName(element.playerUUID()).colorIfAbsent(SECONDARY_COLOR))
+                                .append(text(" at "))
+                                .append(text(TimeUtil.formatTimestamp(element.timestamp())).color(SECONDARY_COLOR));
+                        if (element.additionalData() != null){
+                            message = message.append(Component.text(": \"" + new String(element.additionalData()) + "\""));
+                        }
+                        sender.sendMessage(CHAT_PREFIX.append(message));
+                    }
             ).thenAccept((count) -> {
                 long time = System.nanoTime() - n;
                 float timeMs = Math.round(time / 10000f) / 100f;
