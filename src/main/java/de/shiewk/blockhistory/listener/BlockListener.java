@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Container;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderCrystal;
@@ -41,6 +42,15 @@ public class BlockListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) public void onBlockBreak(BlockBreakEvent event){
         final Block block = event.getBlock();
         addBlockHistoryEntry(HistoryElement.Type.BREAK, event.getPlayer(), block);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) public void onChestOpen(PlayerInteractEvent event){
+        if (event.hasBlock() && event.getAction().isRightClick()){
+            final Block block = event.getClickedBlock();
+            if (block.getState() instanceof Container){
+                addBlockHistoryEntry(HistoryElement.Type.CHEST_OPEN, event.getPlayer(), block);
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) public void onBlockPlace(BlockPlaceEvent event){

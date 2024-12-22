@@ -118,7 +118,8 @@ public record HistoryElement (
         EXPLODE_TNT("EXPLODED USING TNT"),
         EXPLODE_CREEPER("EXPLODED USING CREEPER"),
         EXPLODE_BLOCK("EXPLODED USING BLOCK"),
-        SIGN("CHANGED");
+        SIGN("CHANGED"),
+        CHEST_OPEN("OPENED");
 
         public final String name;
 
