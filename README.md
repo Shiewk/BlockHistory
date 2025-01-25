@@ -1,4 +1,8 @@
 # BlockHistory
+> [!NOTE]  
+> This archived repository contains an outdated version of the plugin, version 2.
+> For versions 3.0.0 or newer, please go to [BlockHistory3](https://github.com/Shiewk/BlockHistory3) instead.
+
 A simple but effective Paper Minecraft plugin that allows you to find griefers on your server more easily.
 
 The plugin "BlockHistory" can help you find griefers more easily. The plugin saves when a block is broken or placed. That way you can easily see who broke or placed blocks.
